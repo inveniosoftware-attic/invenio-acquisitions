@@ -1,0 +1,109 @@
+{# -*- coding: utf-8 -*-
+#
+# This file is part of Invenio.
+# Copyright (C) 2015 CERN.
+#
+# Invenio is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# Invenio is distributed in the hope that it wacquisition be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Invenio; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+#}
+
+{%- extends 'circulation_base_blank.html' -%}
+
+{% from 'macros.html' import options %}
+
+{%- block css %}
+    {{ super() }}
+    {% assets "invenio_circulation_acquisition_css" %}<link href="{{ ASSET_URL }}" rel="stylesheet">{% endassets %}
+{%- endblock css %}
+
+{%- block javascript -%}
+    {{ super() }}
+    {% assets "invenio_circulation_acquisition_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{%- endblock javascript -%}
+
+{%- block circulation_body -%}
+
+{% block circulation_acquisition_user %}
+{% endblock %}
+
+<div id="acquisition_document" data-record_id="{{record_id}}" data-user_id="{{user_id}}" class="panel panel-default">
+    <div class="panel-heading">Document Details</div>
+    <div class="panel-body">
+        <form id="document_form">
+            <div class="form-group">
+                <label>Title</label>
+                <input class="form-control" value="{{title_statement.title}}" data-value_name="title_statement.title">
+            </div>
+            <div class="form-group">
+                <label>ISBN</label>
+                <input class="form-control" value="{{international_standard_book_number.international_standard_book_number}}" data-value_name="international_standard_book_number.international_standard_book_number">
+            </div>
+            <div class="form-group">
+                <label>Authors</label>
+                <input class="form-control" placeholder="Author list separated by semicolons" value="{{circulation_compact_authors}}" data-value_name="circulation_compact_authors">
+            </div>
+            <div class="form-group">
+                <label>Year</label>
+                <input class="form-control" value="{{publication_distribution_imprint.0.date_of_publication_distribution.0}}" data-value_name="publication_distribution_imprint.0.date_of_publication_distribution.0">
+            </div>
+            <div class="form-group">
+                <label>Publisher</label>
+                <input class="form-control" value="{{publication_distribution_imprint.0.name_of_publisher_distributor.0}}" data-value_name="publication_distribution_imprint.0.name_of_publisher_distributor.0">
+            </div>
+            <div class="form-group">
+                <label>Edition</label>
+                <input class="form-control" value="{{edition_statement.edition_statement}}" data-value_name="edition_statement.edition_statement">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Acquisition Information</div>
+    <div class="panel-body">
+        <form>
+            {% if delivery %}
+            <div class="form-group">
+                <label>Delivery</label>
+                <select class="form-control" id="circulation_option_delivery">
+                    <option>Pick up</option>
+                    <option>Internal Mail</option>
+                </select>
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select class="form-control" id="circulation_option_payment_method">
+                    <option>Cash</option>
+                    <option>Budget Code</option>
+                </select>
+            </div>
+            <div id="circulation_option_budget_code" class="form-group" style="display:None">
+                <label>Budget Code</label>
+                <input class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Copies</label>
+                <input id="circulation_option_copies" class="form-control" value="1">
+            </div>
+            <div class="form-group">
+                <label>Additional Comments</label>
+                <textarea id="circulation_option_comments" class="form-control" rows="3"></textarea>
+            </div>
+        </form>
+    </div>
+</div>
+
+<button id="acquisition_request_submit" class="btn btn-success btn-block" type="submit" data-action="{{action}}" data-type="{{type}}">Submit</button>
+{%- endblock -%}
